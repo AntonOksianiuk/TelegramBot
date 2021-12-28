@@ -67,7 +67,4 @@ public class CityService {
                         cityRepo.findByName(name))
                 .orElseThrow(CityNotFoundException::new);
     }
-
-    //I added a comment here
-    //3 3 3
 }

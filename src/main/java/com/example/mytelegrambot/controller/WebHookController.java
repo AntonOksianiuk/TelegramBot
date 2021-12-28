@@ -33,21 +33,20 @@ public class WebHookController {
     }
 
     @GetMapping("/cities")
-    public ResponseEntity<List<City>> getAllCities(){
+    public ResponseEntity<List<City>> getAllCities() {
         return new ResponseEntity<>(cityService.getAllCities(), HttpStatus.OK);
     }
 
     @GetMapping("/cities/{cityId}")
-    public ResponseEntity<City> getCityByName(@PathVariable("cityId") Long cityId){
+    public ResponseEntity<City> getCityByName(@PathVariable("cityId") Long cityId) {
         return new ResponseEntity<>(cityService.getCityById(cityId), HttpStatus.OK);
     }
 
     @PostMapping("/cities/{city}/description")
     public ResponseEntity<City> addDescriptionToCity(@Valid @PathVariable("city") City city,
                                                      @Valid @RequestBody Description description,
-                                                     BindingResult bindingResult){
-        if (bindingResult.hasErrors()){
-            //throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Bad credentials");
+                                                     BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
         cityService.addDescriptionToCity(city, description);
@@ -55,7 +54,7 @@ public class WebHookController {
     }
 
     @PostMapping("/cities")
-    public ResponseEntity<City> addCity(@Valid @RequestBody City city){
+    public ResponseEntity<City> addCity(@Valid @RequestBody City city) {
         cityService.addCity(city);
         return new ResponseEntity<>(cityService.getCityByName(city.getName()), HttpStatus.OK);
     }

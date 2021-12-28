@@ -20,13 +20,13 @@ public class DescriptionService {
         this.descriptionRepo = descriptionRepo;
     }
 
-    public Description getRandomDescriptionForCity(City city){
+    public Description getRandomDescriptionForCity(City city) {
         Long cityId = city.getId();
         List<Description> descriptionList = descriptionRepo.findAllByCityId(cityId);
 
         return Optional.ofNullable(
-                descriptionList.get(new Random()
-                        .nextInt(descriptionList.size())))
+                        descriptionList.get(new Random()
+                                .nextInt(descriptionList.size())))
                 .orElseThrow(DescriptionNotFoundException::new);
 
     }

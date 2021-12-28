@@ -14,11 +14,11 @@ public class ReplyMessageService {
         this.localeMessageService = localeMessageService;
     }
 
-    public SendMessage getReplyMessage(String chatId, String replyMessage){
+    public SendMessage getReplyMessage(String chatId, String replyMessage) {
         return new SendMessage(chatId, localeMessageService.getMessage(replyMessage));
     }
 
-    public SendMessage getReplyMessage(String chatId,String replyMessage, Object... args){
+    public SendMessage getReplyMessage(String chatId, String replyMessage, Object... args) {
         return new SendMessage(chatId, localeMessageService.getMessage(replyMessage, args));
     }
 }

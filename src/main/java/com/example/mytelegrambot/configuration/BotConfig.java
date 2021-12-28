@@ -24,7 +24,7 @@ public class BotConfig {
     private int proxyPort;
 
     @Bean
-    public MyTravelTelegramBot myTravelTelegramBot(){
+    public MyTravelTelegramBot myTravelTelegramBot() {
         DefaultBotOptions botOptions = new DefaultBotOptions();
         botOptions.setProxyHost(proxyHost);
         botOptions.setProxyPort(proxyPort);

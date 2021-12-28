@@ -57,7 +57,10 @@ public class TelegramFacade {
                                 .reduce((accumulator, element) -> element + " ")
                                 .get();
                 break;
-            default:
+            case "Добавить город":
+
+
+                default:
                 try {
                     City recievedCity = cityService.getCityByName(inputMessage);
                     Description recievedDescription = descriptionService.getRandomDescriptionForCity(recievedCity);

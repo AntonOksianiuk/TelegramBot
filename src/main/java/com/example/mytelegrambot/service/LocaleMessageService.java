@@ -16,11 +16,11 @@ public class LocaleMessageService {
         this.messageSource = messageSource;
     }
 
-    public String getMessage(String message){
+    public String getMessage(String message) {
         return messageSource.getMessage(message, null, locale);
     }
 
-    public String getMessage(String message, Object... args){
+    public String getMessage(String message, Object... args) {
         return messageSource.getMessage(message, args, locale);
     }
 }
