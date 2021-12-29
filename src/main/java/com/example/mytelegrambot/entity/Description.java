@@ -2,10 +2,13 @@ package com.example.mytelegrambot.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.*;
 
-@Data
+@Getter
+@Setter
 @Entity
 public class Description {
 
@@ -18,4 +21,12 @@ public class Description {
     @ManyToOne
     @JsonIgnore
     private City city;
+
+    @Override
+    public String toString() {
+        return "Description{" +
+                "id=" + id +
+                ", description='" + description + '\'' +
+                '}';
+    }
 }

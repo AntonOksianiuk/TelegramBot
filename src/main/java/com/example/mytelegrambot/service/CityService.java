@@ -1,7 +1,9 @@
 package com.example.mytelegrambot.service;
 
+import com.example.mytelegrambot.cache.CacheCity;
 import com.example.mytelegrambot.entity.City;
 import com.example.mytelegrambot.entity.Description;
+import com.example.mytelegrambot.exception.CityAlreadyExistException;
 import com.example.mytelegrambot.exception.CityNotFoundException;
 import com.example.mytelegrambot.repository.CityRepo;
 import com.example.mytelegrambot.repository.DescriptionRepo;
@@ -45,6 +47,9 @@ public class CityService {
         newCity.setDescriptions(descriptionList);
         newCity.setName(city.getName());
 
+        if (cityRepo.existsByName(city.getName())) {
+            throw new CityAlreadyExistException();
+        }
         return cityRepo.save(newCity);
     }
 

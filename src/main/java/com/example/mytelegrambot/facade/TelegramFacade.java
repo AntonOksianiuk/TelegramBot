@@ -1,11 +1,14 @@
 package com.example.mytelegrambot.facade;
 
-import com.example.mytelegrambot.entity.City;
-import com.example.mytelegrambot.entity.Description;
-import com.example.mytelegrambot.exception.CityNotFoundException;
-import com.example.mytelegrambot.exception.DescriptionNotFoundException;
+import com.example.mytelegrambot.cache.CacheCity;
+import com.example.mytelegrambot.cache.CacheState;
+import com.example.mytelegrambot.configuration.BotState;
+import com.example.mytelegrambot.exception.CityAlreadyExistException;
+import com.example.mytelegrambot.handler.CreateCityHandler;
+import com.example.mytelegrambot.handler.DefaultHandler;
 import com.example.mytelegrambot.service.CityService;
 import com.example.mytelegrambot.service.DescriptionService;
+import com.example.mytelegrambot.util.BotStateUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -19,6 +22,15 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 public class TelegramFacade {
     private CityService cityService;
     private DescriptionService descriptionService;
+    @Autowired
+    private CacheState cacheState;
+    @Autowired
+    private CreateCityHandler createCityHandler;
+    @Autowired
+    private DefaultHandler defaultHandler;
+    @Autowired
+    private CacheCity cacheCity;
+
 
     @Autowired
     public TelegramFacade(CityService cityService, DescriptionService descriptionService) {
@@ -41,38 +53,29 @@ public class TelegramFacade {
     }
 
     private SendMessage handleInputMessage(Message message) {
+        Long chatId = message.getChatId();
         String inputMessage = message.getText();
         long userId = message.getFrom().getId();
         String replyMessage = null;
 
-        switch (inputMessage) {
-            case "/start":
-                replyMessage = "Введите название города, а я выведу информацию о нём";
-                break;
+        log.info("Запрос на закэшированные стейты");
 
-            case "Показать города":
-                replyMessage = "Доступны описания к следующим городам : \n" +
-                        cityService.getAllCities().stream()
-                                .map(el -> el.getName())
-                                .reduce((accumulator, element) -> element + " ")
-                                .get();
-                break;
-            case "Добавить город":
+        BotState currentBotState = cacheState.getState(chatId);
+        try {
+            switch (BotStateUtil.getMainBotState(currentBotState)) {
+                case CREATE_CITY:
+                    replyMessage = createCityHandler.handle(message, currentBotState);
+                    break;
+                case DEFAULT:
+                    replyMessage = defaultHandler.handle(message, currentBotState);
+                    break;
+            }
 
 
-                default:
-                try {
-                    City recievedCity = cityService.getCityByName(inputMessage);
-                    Description recievedDescription = descriptionService.getRandomDescriptionForCity(recievedCity);
-
-                    replyMessage = recievedDescription.getDescription();
-                } catch (CityNotFoundException e) {
-                    replyMessage = "Ничего не знаю про город " + inputMessage + " ..." +
-                            "\nЧтобы увидеть список доступных городов введите команду \"Показать города\"";
-                } catch (DescriptionNotFoundException e) {
-                    replyMessage = "Для города " + inputMessage + " нет описания";
-                }
-                break;
+        } catch (CityAlreadyExistException e){
+            replyMessage = "Город уже существует!!!";
+            cacheState.setState(chatId, BotState.DEFAULT);
+            cacheCity.set(chatId, null);
         }
 
         return new SendMessage(message.getChatId().toString(), replyMessage);

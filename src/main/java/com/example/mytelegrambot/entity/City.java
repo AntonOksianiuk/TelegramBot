@@ -23,4 +23,9 @@ public class City {
             cascade = CascadeType.ALL)
     private List<Description> descriptions = new ArrayList<>();
 
+    public void addDescriptionToCity(String description){
+        Description description1 = new Description();
+        description1.setDescription(description);
+        descriptions.add(description1);
+    }
 }
