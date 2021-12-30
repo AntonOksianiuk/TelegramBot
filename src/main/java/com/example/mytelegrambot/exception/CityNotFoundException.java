@@ -1,6 +1,8 @@
 package com.example.mytelegrambot.exception;
 
-public class CityNotFoundException extends RuntimeException {
+import java.util.function.Supplier;
+
+public class CityNotFoundException extends RuntimeException{
     public CityNotFoundException() {
     }
 }
