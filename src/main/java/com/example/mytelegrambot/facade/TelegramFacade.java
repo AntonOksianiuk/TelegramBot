@@ -81,5 +81,3 @@ public class TelegramFacade {
         return new SendMessage(message.getChatId().toString(), replyMessage);
     }
 }
-
-//This is a new comment from github
