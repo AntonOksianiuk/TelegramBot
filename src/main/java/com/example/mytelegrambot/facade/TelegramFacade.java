@@ -3,9 +3,13 @@ package com.example.mytelegrambot.facade;
 import com.example.mytelegrambot.cache.CacheCity;
 import com.example.mytelegrambot.cache.CacheState;
 import com.example.mytelegrambot.configuration.BotState;
+import com.example.mytelegrambot.entity.City;
 import com.example.mytelegrambot.exception.CityAlreadyExistException;
+import com.example.mytelegrambot.exception.CityNotFoundException;
 import com.example.mytelegrambot.handler.CreateCityHandler;
 import com.example.mytelegrambot.handler.DefaultHandler;
+import com.example.mytelegrambot.handler.DeleteCityHandler;
+import com.example.mytelegrambot.handler.Handler;
 import com.example.mytelegrambot.service.CityService;
 import com.example.mytelegrambot.service.DescriptionService;
 import com.example.mytelegrambot.util.BotStateUtil;
@@ -22,12 +26,16 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 public class TelegramFacade {
     private CityService cityService;
     private DescriptionService descriptionService;
+
     @Autowired
     private CacheState cacheState;
     @Autowired
     private CreateCityHandler createCityHandler;
     @Autowired
     private DefaultHandler defaultHandler;
+    @Autowired
+    private DeleteCityHandler deleteCityHandler;
+
     @Autowired
     private CacheCity cacheCity;
 
@@ -63,11 +71,20 @@ public class TelegramFacade {
         BotState currentBotState = cacheState.getState(chatId);
         try {
             switch (BotStateUtil.getMainBotState(currentBotState)) {
+                case DEFAULT:
+                    replyMessage = defaultHandler.handle(message, currentBotState);
+                    break;
+
                 case CREATE_CITY:
                     replyMessage = createCityHandler.handle(message, currentBotState);
                     break;
-                case DEFAULT:
-                    replyMessage = defaultHandler.handle(message, currentBotState);
+
+                case DELETE_CITY:
+                    try {
+                        replyMessage = deleteCityHandler.handle(message, currentBotState);
+                    } catch (CityNotFoundException e){
+                        replyMessage = "Город с таким названием найден не был";
+                    }
                     break;
             }
 

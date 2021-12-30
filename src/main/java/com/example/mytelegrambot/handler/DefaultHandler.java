@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 
 @Component
 @Slf4j
-public class DefaultHandler {
+public class DefaultHandler implements Handler{
     @Autowired
     CityService cityService;
     @Autowired
@@ -50,6 +50,11 @@ public class DefaultHandler {
             case "Добавить город":
                 cacheState.setState(chatId, BotState.CREATE_CITY);
                 replyMessage = "Введите имя города";
+                break;
+
+            case "Удалить город":
+                cacheState.setState(chatId, BotState.DELETE_CITY);
+                replyMessage = "Введите имя города, который будете удалять ";
                 break;
 
             default:

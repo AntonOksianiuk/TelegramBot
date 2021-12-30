@@ -11,6 +11,9 @@ public class BotStateUtil {
             case ASK_DESCRIPTION:
                 return BotState.CREATE_CITY;
 
+            case DELETE_CITY:
+                return BotState.DELETE_CITY;
+
             default:
                 return BotState.DEFAULT;
         }

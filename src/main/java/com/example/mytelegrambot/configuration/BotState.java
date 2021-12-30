@@ -6,7 +6,7 @@ public enum BotState {
     ASK_CITYNAME,
     ASK_DESCRIPTION,
 
-    DEFAULT
+    DELETE_CITY, DEFAULT
 
 
 }

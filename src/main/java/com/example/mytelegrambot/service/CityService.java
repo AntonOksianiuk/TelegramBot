@@ -69,7 +69,7 @@ public class CityService {
 
     public City getCityByName(String name) {
         return Optional.ofNullable(
-                        cityRepo.findByName(name))
+                cityRepo.findByName(name))
                 .orElseThrow(CityNotFoundException::new);
     }
 }

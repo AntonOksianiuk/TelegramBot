@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.Message;
 
 @Component
-public class CreateCityHandler {
+public class CreateCityHandler implements Handler{
     @Autowired
     CacheState cacheState;
     @Autowired
